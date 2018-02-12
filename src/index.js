@@ -3,9 +3,30 @@
  */
 import store, { getMessageInfo, changeTimeFormat } from './store';
 // example of generating HTML with js
-//
-function renderThreads() {
-  const inbox = store.mailboxes.INBOX;
+
+function addMailboxList() {
+  const mailboxes = Object.keys(store.mailboxes);
+  return mailboxes.map(mailbox => `
+    <li class="nav-item">
+      <button class="mailbox-item active" type="button" id="${mailbox}" >${mailbox}</button>
+    </li>
+    `).join('');
+}
+
+function renderNav() {
+  const mailboxNav = `
+    <ul class="nav-list">
+      ${addMailboxList()}
+    </ul>
+  `;
+
+  const container = document.querySelector('.nav-container');
+  if (container != null) container.innerHTML = mailboxNav;
+}
+
+
+function renderThreads(activeMailbox = 'INBOX') {
+  const inbox = store.mailboxes[activeMailbox];
   if (inbox == null) return '';
   const threadIDs = inbox.threadIds;
 
@@ -34,12 +55,11 @@ function renderThreads() {
   }).join('');
 }
 
-
-function renderSidebar() {
+function renderSidebar(activeMailbox = 'INBOX') {
   const sidebarContents = `
-    <h2 class="email-header">Inbox</h2>
+    <h2 class="email-header">${activeMailbox}</h2>
     <ul class="email-list">
-      ${renderThreads()}
+      ${renderThreads(activeMailbox)}
     </ul>
   `;
 
@@ -48,3 +68,21 @@ function renderSidebar() {
 }
 
 renderSidebar();
+renderNav();
+
+function changeMailbox(evenTarget) {
+  const mailboxName = evenTarget.id;
+  const activeMailbox = document.querySelector('.active');
+  activeMailbox.classList.remove('active');
+  evenTarget.classList.add('active');
+  renderSidebar(mailboxName);
+}
+
+function addClickNav() {
+  const mailboxlist = document.querySelectorAll('.mailbox-item');
+  mailboxlist.forEach(button =>
+    button.addEventListener('click', e => changeMailbox(e.target)));
+}
+
+
+addClickNav();
