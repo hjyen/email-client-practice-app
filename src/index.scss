@@ -31,6 +31,37 @@ body {
   // height: calc(100vh - 2rem);
 }
 
+.nav-container {
+  border-right: 1px solid $gray;
+  flex: 0.5;
+  // padding: 5px;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mailbox-item {
+  background: none;
+  color: inherit;
+  padding: 10px;
+  cursor: pointer;
+  outline: inherit;
+  width: 100%;
+
+  &:hover {
+    background: lightblue;
+    border-color: lightblue;
+  }
+
+  &:active {
+    background: #b25500;
+    border-color: #b25500;
+  }
+}
+
 .email-list-container {
   border-right: 1px solid $gray;
   flex: 1.2;
